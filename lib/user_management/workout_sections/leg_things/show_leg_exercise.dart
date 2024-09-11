@@ -45,13 +45,7 @@ class _ShowLegExerciseState extends State<ShowLegExercise> {
     'Similar to the right leg, but targets the left leg, enhancing glute and hamstring strength, and hip stability.',
     'Strengthens quads, hamstrings, and glutes; improves balance and coordination while enhancing overall lower body strength.',
   ];
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getLegExercises(); // Load the list of leg exercises when the widget initializes
-  // }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

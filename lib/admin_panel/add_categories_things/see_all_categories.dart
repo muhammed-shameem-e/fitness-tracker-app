@@ -159,6 +159,44 @@ class _SeeAllCategoriesState extends State<SeeAllCategories> {
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(onPressed: (){
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>ShowNewExercises()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 216, 255, 217),
+                    foregroundColor: Color.fromARGB(255, 67, 109, 68),
+                    minimumSize: Size(300, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    )
+                  ),
+                   child: Text(
+                    'Go',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500
+                    ),
+                    )),
+                    const SizedBox(height: 20),
+                  ElevatedButton(onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 216, 255, 217),
+                    foregroundColor: Color.fromARGB(255, 67, 109, 68),
+                    minimumSize: Size(300, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    )
+                  ),
+                   child: Text(
+                    'I added',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500
+                    ),
+                    )),
                 ],
               ),
             ),
