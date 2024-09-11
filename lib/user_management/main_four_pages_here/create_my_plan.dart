@@ -38,7 +38,7 @@ class _CreateMyPlanState extends State<CreateMyPlan> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.asset('assets/createplan.jfif', height: 300, width: 300),
+                    child: Image.asset('assets/createplan.jfif', height: 400, width: 300),
                   ),
                   const SizedBox(height: 10),
                   const Text(
