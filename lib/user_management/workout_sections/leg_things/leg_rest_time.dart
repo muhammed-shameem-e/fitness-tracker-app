@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/leg_exercise_hive_things/hive_functions.dart';
-import 'package:fullbody_workout/hive_services/leg_exercise_hive_things/leg_exercise_model_class.dart';
 import 'package:fullbody_workout/user_management/workout_sections/leg_things/leg_exerice_one.dart';
 
 class LegRestTime extends StatefulWidget {
-  const LegRestTime({super.key, required this.nextExercise, required this.completedDay});
-  final LegExerciseModelClass nextExercise; // Next exercise details
+  const LegRestTime({super.key, required this.completedDay,required this.index});
+  final int index;
   final int completedDay; // Number of days completed
+
 
   @override
   _LegRestTimeState createState() => _LegRestTimeState();
@@ -16,7 +14,7 @@ class LegRestTime extends StatefulWidget {
 
 class _LegRestTimeState extends State<LegRestTime> {
   Timer? _timer;
-  int _secondsRemaining = 3; // Initial timer duration in seconds
+  int _secondsRemaining = 60; // Initial timer duration in seconds
 
   @override
   void initState() {
@@ -42,8 +40,7 @@ class _LegRestTimeState extends State<LegRestTime> {
   void _navigateToNextExercise() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => LegExerciseOne(
-        exercise: widget.nextExercise,
-        index: legExerciseList.value.indexOf(widget.nextExercise),
+        index:widget.index,
         completedDay: widget.completedDay,
       ),
     ));
@@ -83,16 +80,11 @@ class _LegRestTimeState extends State<LegRestTime> {
           padding: const EdgeInsets.all(20), // Padding around the content
           child: Column(
             children: [
-              Text(
-                'Up Next: ${widget.nextExercise.legExerciseName}', // Display the next exercise name
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
-                textAlign: TextAlign.center,
-              ),
               const SizedBox(height: 10),
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.file(
-                  File(widget.nextExercise.legExerciseGif), // Display exercise GIF
+                child: Image.asset(
+                  'assets/restime.gif',// Display exercise GIF
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -117,7 +109,7 @@ class _LegRestTimeState extends State<LegRestTime> {
               ),
               const SizedBox(height: 40),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // Add 30 seconds button
                   ElevatedButton(
@@ -140,8 +132,7 @@ class _LegRestTimeState extends State<LegRestTime> {
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => LegExerciseOne(
-                          exercise: widget.nextExercise,
-                          index: legExerciseList.value.indexOf(widget.nextExercise),
+                          index: widget.index,
                           completedDay: widget.completedDay,
                         ),
                       ));

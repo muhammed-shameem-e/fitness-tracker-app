@@ -1,14 +1,16 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/upperbody_exercise_hive_things/hive_functions.dart';
-import 'package:fullbody_workout/hive_services/upperbody_exercise_hive_things/upperbody_exercise_model_class.dart';
 import 'package:fullbody_workout/user_management/workout_sections/upper_body_things/upper_body_exercise_one.dart';
 
 class UpperBodyRestTime extends StatefulWidget {
   // Constructor requiring nextExercise and completedDay parameters
-  const UpperBodyRestTime({super.key, required this.nextExercise, required this.completedDay});
-  final UpperBodyExercisesModelClass nextExercise;
+  const UpperBodyRestTime({
+    super.key, 
+    required this.completedDay,
+    required this.index
+    });
+  
+  final int index;
   final int completedDay;
 
   @override
@@ -17,7 +19,7 @@ class UpperBodyRestTime extends StatefulWidget {
 
 class _UpperBodyRestTimeState extends State<UpperBodyRestTime> {
   Timer? _timer; // Timer instance for countdown
-  int _secondsRemaining = 30; // Initial rest time in seconds
+  int _secondsRemaining = 60; // Initial rest time in seconds
 
   @override
   void initState() {
@@ -41,9 +43,9 @@ class _UpperBodyRestTimeState extends State<UpperBodyRestTime> {
   void _navigateToNextExercise() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => UpperBodyExerciseOne(
-        exercise: widget.nextExercise,
-        index: upperBodyExercisesList.value.indexOf(widget.nextExercise),
+        index: widget.index,
         completedDay: widget.completedDay,
+        listLength: 7,
       ),
     ));
   }
@@ -79,7 +81,7 @@ class _UpperBodyRestTimeState extends State<UpperBodyRestTime> {
             children: [
               // Display the name of the next exercise
               Text(
-                'Up Next: ${widget.nextExercise.upperBodyExerciseName}',
+                'Up Next:',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -91,8 +93,8 @@ class _UpperBodyRestTimeState extends State<UpperBodyRestTime> {
               // Display the GIF image of the next exercise
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.file(
-                  File(widget.nextExercise.upperBodyExerciseGif),
+                child: Image.asset(
+                  'assets/restime.gif',
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,

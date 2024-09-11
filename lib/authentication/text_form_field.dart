@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fullbody_workout/hive_services/user_detail_hive_things/hive_functions.dart';
 import 'package:fullbody_workout/hive_services/user_detail_hive_things/user_model_class.dart';
 import 'package:fullbody_workout/user_management/main_four_pages_here/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TextFormFieldFormPage extends StatefulWidget {
   const TextFormFieldFormPage({super.key});
@@ -110,24 +111,30 @@ class _TextFormFieldFormPageState extends State<TextFormFieldFormPage> {
   }
 
   // Check the input and navigate to the HomePage
-  Future<void> checkInput() async {
-    final name = nameController.text.trim();
-    final age = ageController.text.trim();
+ Future<void> checkInput() async {
+  final name = nameController.text.trim();
+  final age = ageController.text.trim();
 
-    if (name.isEmpty || age.isEmpty) {
-      return;
-    }
-
-    final oneUserData = UsersData(
-      name: name,
-      age: age,
-    );
-
-    await addUserDetails(oneUserData);
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => HomePage(data: oneUserData),
-      ),
-    );
+  if (name.isEmpty || age.isEmpty) {
+    return;
   }
+
+  final oneUserData = UsersData(
+    name: name,
+    age: age,
+  );
+
+  await addUserDetails(oneUserData);
+
+  // Set 'isFirstLaunch' to false
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isFirstLaunch', false);
+
+  Navigator.of(context).pushReplacement(
+    MaterialPageRoute(
+      builder: (context) => HomePage(data: oneUserData,index: 1),
+    ),
+  );
+}
+
 }

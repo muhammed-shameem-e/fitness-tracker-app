@@ -1,15 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fullbody_workout/admin_panel/add_categories_things/add_categories.dart';
-import 'package:fullbody_workout/admin_panel/add_categories_things/edit_categories.dart';
-import 'package:fullbody_workout/admin_panel/add_categories_things/show_category_exercises.dart';
-import 'package:fullbody_workout/admin_panel/add_main_categories_exercises/add_leg_exercise.dart';
+import 'package:fullbody_workout/admin_panel/add_categories_things/categorylist.dart';
 import 'package:fullbody_workout/admin_panel/new_exercise_things/show_new_exercises.dart';
-import 'package:fullbody_workout/admin_panel/show_main_categories_exercises/show_abs_exercise.dart';
-import 'package:fullbody_workout/admin_panel/show_main_categories_exercises/show_upperbody_exericse.dart';
 import 'package:fullbody_workout/hive_services/categories_hive_things/categories_model_class.dart';
 import 'package:fullbody_workout/hive_services/categories_hive_things/hive_functions.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart'; // Import the new page
 
 class SeeAllCategories extends StatefulWidget {
   const SeeAllCategories({super.key});
@@ -19,6 +15,7 @@ class SeeAllCategories extends StatefulWidget {
 }
 
 class _SeeAllCategoriesState extends State<SeeAllCategories> {
+  bool _isBottomSheetShown = false; // Tracks if bottom sheet has been shown
   File? _selectCategoriesPhoto; // Stores selected category photo
   TextEditingController categoriesName = TextEditingController(); // Controller for category name
   late List<int> selectedIds; // List of selected category IDs
@@ -44,7 +41,7 @@ class _SeeAllCategoriesState extends State<SeeAllCategories> {
                 MaterialPageRoute(builder: (context) => const ShowNewExercises()),
               );
             },
-            icon: const Icon(Icons.model_training),
+            icon: const Icon(Icons.add_circle_outline),
           ),
         ],
       ),
@@ -53,113 +50,14 @@ class _SeeAllCategoriesState extends State<SeeAllCategories> {
           Column(
             children: [
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CategoryCard(
-                    imagePath: 'assets/upperbodyphoto.jpg',
-                    label: 'UpperBody',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const ShowUpperBodyExerciseAdminSide()),
-                      );
-                    },
-                  ),
-                  CategoryCard(
-                    imagePath: 'assets/absphoto.jpg',
-                    label: 'Abs',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const ShowAbsExerciseAdminSide()),
-                      );
-                    },
-                  ),
-                  CategoryCard(
-                    imagePath: 'assets/legphoto.jpg',
-                    label: 'Leg',
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const AddLegExercise()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              const Text('Other Categories', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              const SizedBox(height: 30),
               Expanded(
                 child: ValueListenableBuilder(
                   valueListenable: categoriesList,
                   builder: (BuildContext context, List<CategoriesModelClass> categoriesList, Widget? child) {
-                    return categoriesList.isEmpty
-                        ? const Center(child: Text('No Categories available'))
-                        : GridView.builder(
-                            itemCount: categoriesList.length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                            itemBuilder: (ctx, index) {
-                              final categories = categoriesList[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => ShowCategoriesExerciseAdminSide(category: categories),
-                                          ),
-                                        );
-                                      },
-                                      onLongPress: () {
-                                        if (categories.categoriesId != null) {
-                                          alertDeleteCategory(categories.categoriesId!);
-                                        }
-                                      },
-                                      child: Container(
-                                        height: 125,
-                                        width: 125,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: const Color.fromARGB(255, 204, 204, 204),
-                                            width: 2,
-                                          ),
-                                        ),
-                                        child: categories.categoriesImage.isNotEmpty
-                                            ? ClipRRect(
-                                                borderRadius: BorderRadius.circular(10),
-                                                child: Image.file(File(categories.categoriesImage), fit: BoxFit.cover),
-                                              )
-                                            : null,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 30, right: 30),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(categories.categoriesName),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) => EditCategoryPage(category: categories),
-                                                ),
-                                              );
-                                            },
-                                            child: const Text('Edit', style: TextStyle(color: Colors.blue)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
+                    Future.delayed(Duration.zero,(){
+                      noticeForNewPage(context);
+                    });
+                    return CategoriesGridPage(categoriesList: categoriesList); // Use the new page
                   },
                 ),
               ),
@@ -179,7 +77,7 @@ class _SeeAllCategoriesState extends State<SeeAllCategories> {
                   ),
                 ),
                 child: const Text(
-                  'Add',
+                  'Add Category',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -238,45 +136,36 @@ class _SeeAllCategoriesState extends State<SeeAllCategories> {
       },
     );
   }
-}
-
-// Widget for displaying category cards
-class CategoryCard extends StatelessWidget {
-  final String imagePath;
-  final String label;
-  final VoidCallback onTap;
-
-  const CategoryCard({super.key, 
-    required this.imagePath,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: const Color.fromARGB(255, 204, 204, 204),
-                width: 2,
+  void noticeForNewPage(BuildContext context) {
+     if (_isBottomSheetShown) return; // Prevent the sheet from showing again
+    _isBottomSheetShown = true; // Mark that the bottom sheet has been shown
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 300,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+             color: Colors.green[400],
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Text(
+                    "To create a new category, you first need to add some exercises. Please go to the 'Add Exercises' page to add exercises and then come back to add a new category.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                ],
               ),
             ),
-            child: ClipOval(
-              child: Image.asset(imagePath, fit: BoxFit.fill),
-            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Text(label),
-      ],
+        );
+      },
     );
   }
+
 }

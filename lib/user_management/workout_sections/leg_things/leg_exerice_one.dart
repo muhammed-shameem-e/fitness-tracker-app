@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/leg_exercise_hive_things/hive_functions.dart';
-import 'package:fullbody_workout/hive_services/leg_exercise_hive_things/leg_exercise_model_class.dart';
 import 'package:fullbody_workout/user_management/workout_sections/leg_30_days.dart';
 import 'package:fullbody_workout/user_management/workout_sections/leg_things/leg_rest_time.dart';
 import 'package:fullbody_workout/user_management/workout_sections/leg_things/legcongratulations.dart';
@@ -10,12 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LegExerciseOne extends StatefulWidget {
   const LegExerciseOne({
     super.key,
-    required this.exercise,
     required this.index,
     required this.completedDay,
   });
 
-  final LegExerciseModelClass exercise;
   final int index;
   final int completedDay;
 
@@ -27,6 +23,41 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
   bool isThumbDownPressed = false;
   bool isThumbUpPressed = false;
 
+  final List<String> leg = [
+    'assets/leg1.gif',
+    'assets/leg2.gif',
+    'assets/leg3.gif',
+    'assets/leg4.gif',
+    'assets/leg6.gif',
+    'assets/leg7.gif',
+    'assets/leg8.gif',
+    'assets/leg9.gif',
+  ];
+
+  final List<String> names = [
+    'Plank with both leg',
+    'Mountain climber',
+    'walking lungers',
+    'Jump squat',
+    'Glute bridge right leg',
+    'Glute bridge left leg',
+    'Lungers with both leg',
+    'Body weight squat'
+  ];
+
+  final List<String> benefit = [
+    'Strengthens the core, shoulders, and back; improves stability and endurance.',
+    'Enhances cardiovascular endurance, core stability, and overall strength while improving agility.',
+    'Builds lower body strength, improves balance, and enhances flexibility and coordination.',
+    'Increases lower body power, boosts cardiovascular fitness, and enhances explosive strength.',
+    'Targets the glutes, hamstrings, and lower back; improves hip stability and strength in the right leg.',
+    'Similar to the right leg, but targets the left leg, enhancing glute and hamstring strength, and hip stability.',
+    'Strengthens quads, hamstrings, and glutes; improves balance and coordination while enhancing overall lower body strength.',
+    'The bodyweight squat strengthens the legs and core, improves mobility, and enhances functional movement without the need for equipment.'
+  ];
+
+  final List<int> numbers = [23, 11, 29, 15, 27, 19, 12, 30];
+
   @override
   void initState() {
     super.initState();
@@ -37,16 +68,16 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
     final save = await SharedPreferences.getInstance();
     setState(() {
       // Retrieve and set button states from SharedPreferences
-      isThumbDownPressed = save.getBool('isThumbDownPressed${widget.exercise.legExerciseName}') ?? false;
-      isThumbUpPressed = save.getBool('isThumbUpPressed${widget.exercise.legExerciseName}') ?? false;
+      isThumbDownPressed = save.getBool('isThumbDownPressed${widget.index}') ?? false;
+      isThumbUpPressed = save.getBool('isThumbUpPressed${widget.index}') ?? false;
     });
   }
 
   Future<void> _savePreferences() async {
     final save = await SharedPreferences.getInstance();
     // Save button states to SharedPreferences
-    await save.setBool('isThumbDownPressed${widget.exercise.legExerciseName}', isThumbDownPressed);
-    await save.setBool('isThumbUpPressed${widget.exercise.legExerciseName}', isThumbUpPressed);
+    await save.setBool('isThumbDownPressed${widget.index}', isThumbDownPressed);
+    await save.setBool('isThumbUpPressed${widget.index}', isThumbUpPressed);
   }
 
   @override
@@ -59,7 +90,7 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
     final snackBarBackgroundColorLike = isDarkMode ? Colors.green[800] : Colors.green;
     final snackBarBackgroundColorDislike = isDarkMode ? Colors.red[800] : Colors.red;
 
-    final int length = legExerciseList.value.length;
+    final int length = leg.length;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -69,7 +100,7 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(widget.exercise.legExerciseName, style: TextStyle(fontWeight: FontWeight.w500, color: iconColor)),
+            Text('${names[widget.index]}', style: TextStyle(fontWeight: FontWeight.w500, color: iconColor)),
             const SizedBox(width: 5),
             Text('${widget.index + 1}/$length', style: TextStyle(color: Colors.grey[800], fontSize: 15)),
           ],
@@ -91,7 +122,7 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  child: Image.file(File(widget.exercise.legExerciseGif)), // Display exercise image
+                  child: Image.asset(leg[widget.index]), // Display exercise image
                 ),
               ),
               Padding(
@@ -119,12 +150,6 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
                         );
                       },
                       icon: Icon(Icons.thumb_down, color: isThumbDownPressed ? Colors.red : iconColor),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _showAboutExercise(context, widget.exercise.legExerciseGif, widget.exercise.legExerciseName);
-                      },
-                      icon: Icon(Icons.question_mark, color: iconColor),
                     ),
                     IconButton(
                       onPressed: () async {
@@ -155,8 +180,8 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+              Text(
+                '${benefit[widget.index]}',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
@@ -188,7 +213,6 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
                       } else if (widget.index > 0) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LegExerciseOne(
-                            exercise: legExerciseList.value[widget.index - 1],
                             index: widget.index - 1,
                             completedDay: widget.completedDay,
                           ),
@@ -214,7 +238,7 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
                       // Add any onPressed functionality if needed, or leave it empty
                     },
                     child: Text(
-                      widget.exercise.legreps,
+                      '${numbers[widget.index]}',
                       style: TextStyle(
                         fontSize: 20,
                         color: iconColor, // Set text color dynamically
@@ -232,14 +256,14 @@ class _LegExerciseOneState extends State<LegExerciseOne> {
                       elevation: 0, // Ensures a flat appearance similar to CircleAvatar
                     ),
                     onPressed: () {
-                      if (widget.index == legExerciseList.value.length - 1) {
+                      if (widget.index == leg.length - 1) {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => LegCongratulations(completedDay: widget.completedDay),
                         ));
                       } else {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LegRestTime(
-                            nextExercise: legExerciseList.value[widget.index + 1],
+                            index: widget.index + 1,
                             completedDay: widget.completedDay,
                           ),
                         ));

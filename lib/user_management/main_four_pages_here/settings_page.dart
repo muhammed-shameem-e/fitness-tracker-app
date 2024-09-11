@@ -167,8 +167,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   child: const Center(
                     child: Text(
-                      'Log out',
-                      style: TextStyle(color: Colors.red, fontSize: 17, fontWeight: FontWeight.bold),
+                      'Go to Admin Side',
+                      style: TextStyle(color: Colors.green, fontSize: 17, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -186,7 +186,8 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: const Text('Are you sure you want to exit this app?'),
+          title: Text('Confirmation'),
+          content: const Text('Are you sure you want to go Admin Side'),
           actions: [
             TextButton(
               onPressed: () {
@@ -203,7 +204,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   (Route<dynamic> route) => route.isFirst,
                 );
               },
-              child: const Text('YES', style: TextStyle(color: Colors.red)),
+              child: const Text('YES', style: TextStyle(color: Colors.green)),
             ),
           ],
         );
@@ -265,16 +266,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
             if (_selectedStar == -1) {
               currentImage = 'assets/blushphoto.png';
-              currentText = "We are working hard for a better user experience. We'd greatly appreciate if you can rate us.";
+              currentText = "Your feedback helps us grow! We'd love it if you could take a moment to rate your experience.";
             } else if (2 >= _selectedStar) {
               currentImage = 'assets/sadphoto.png';
-              currentText = "Oh, no! Please leave us some feedback.";
+              currentText = "Uh-oh! Something went wrong? We’d love to hear your feedback to make things right.";
             } else if (_selectedStar == 3) {
               currentImage = 'assets/smilephoto.png';
-              currentText = "We like you too! Thanks for your feedback.";
+              currentText = "You're awesome! Thanks for sharing your feedback with us!";
             } else if (_selectedStar == 4) {
               currentImage = 'assets/happyphoto.png';
-              currentText = "We like you too! Thanks for your feedback.";
+              currentText = "You're awesome! Thanks for sharing your feedback with us!";
             }
 
             return AlertDialog(

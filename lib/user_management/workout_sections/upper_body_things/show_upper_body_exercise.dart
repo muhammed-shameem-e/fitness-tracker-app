@@ -1,7 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/upperbody_exercise_hive_things/hive_functions.dart';
-import 'package:fullbody_workout/hive_services/upperbody_exercise_hive_things/upperbody_exercise_model_class.dart';
 import 'package:fullbody_workout/user_management/workout_sections/upper_body_things/upper_body_exercise_one.dart';
 
 class ShowUpperBodyExercise extends StatefulWidget {
@@ -12,7 +9,7 @@ class ShowUpperBodyExercise extends StatefulWidget {
   const ShowUpperBodyExercise({
     super.key, 
     required this.onComplete, 
-    required this.completedDay
+    required this.completedDay,
   });
 
   @override
@@ -21,12 +18,37 @@ class ShowUpperBodyExercise extends StatefulWidget {
 
 class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
 
-  @override
-  void initState() {
-    super.initState();
-    // Fetch upper body exercises when the widget is initialized
-    getUpperBodyExercises();
-  }
+  final List<String> upperbody = [
+    'assets/pushup1.gif',
+    'assets/pushup2.gif',
+    'assets/pushup3.gif',
+    'assets/pushup4.gif',
+    'assets/pushup5.gif',
+    'assets/pushup6.gif',
+    'assets/pushup7.gif',
+  ];
+
+  final List<String> names = [
+    'Standard Grip',
+    'Feet Elevated',
+    'Spider Man',
+    'Eccentric',
+    'Wide Grip',
+    'Atomic',
+    'Pike',
+  ];
+
+  final List<String> benefit = [
+      'Strengthens chest, shoulders, and triceps; improves core stability and shoulder mobility.',
+      'Increases upper chest and shoulder activation; boosts core engagement and upper body strength.',
+      'Targets obliques, improves mobility and coordination, and builds upper body strength.',
+      'Builds strength through controlled lowering, improves form, and increases endurance.',
+      'Focuses on outer chest and shoulders, reduces tricep involvement, and improves stability.',
+      'Combines push-up with knee tuck, enhancing core stability and total body strength.',
+      'Strengthens shoulders and upper chest, improves core engagement, and builds flexibility.'
+    ];
+
+  List<int> numbers = [25, 12, 29, 18, 23, 15, 27];
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +64,7 @@ class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
             child: Column(
               children: [
                 // Header Row displaying title and day
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -50,45 +72,35 @@ class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      'Day 1',
+                      'Day ${widget.completedDay}',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
                 Expanded(
-                  child: ValueListenableBuilder(
-                    valueListenable: upperBodyExercisesList,
-                    builder: (BuildContext context, List<UpperBodyExercisesModelClass> upperBodyExercisesList, Widget? child) {
-                      if (upperBodyExercisesList.isEmpty) {
-                        // Display message if no exercises are available
-                        return const Center(child: Text('No exercises available'));
-                      } else {
-                        // Display list of exercises with GIFs and details
-                        return ListView.separated(
+                 child: ListView.separated(
                           itemBuilder: (ctx, index) {
-                            final exercise = upperBodyExercisesList[index];
                             return ListTile(
-                              leading: exercise.upperBodyExerciseGif.isNotEmpty
-                                  ? GestureDetector(
-                                      onTap: () => showAboutExercise(context, exercise.upperBodyExerciseGif, exercise.upperBodyExerciseName),
+                              minVerticalPadding: 15, 
+                              leading:
+                                    GestureDetector(
+                                      onTap: (){
+                                        showAboutExercise(context, upperbody[index], names[index], benefit[index]);
+                                      },
                                       child: ClipRRect(
-                                        child: Image.file(File(exercise.upperBodyExerciseGif), height: 150, width: 75, fit: BoxFit.cover),
-                                      ),
-                                    )
-                                  : null,
-                              title: Text(exercise.upperBodyExerciseName),
-                              subtitle: Text(exercise.upperBodyReps),
+                                          child: Image.asset(upperbody[index]),
+                                        ),
+                                    ),
+                              title: Text('${names[index]}'),
+                              subtitle: Text('x${numbers[index]}'),
                             );
                           },
                           separatorBuilder: (context, index) {
                             return const Divider();
                           },
-                          itemCount: upperBodyExercisesList.length,
-                        );
-                      }
-                    },
-                  ),
+                          itemCount: upperbody.length,
+                        ),
                 ),
               ],
             ),
@@ -100,18 +112,16 @@ class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
               alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: () {
-                  if (upperBodyExercisesList.value.isNotEmpty) {
                     widget.onComplete(); 
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => UpperBodyExerciseOne(
-                          exercise: upperBodyExercisesList.value[0],
                           index: 0,
                           completedDay: widget.completedDay,
+                          listLength: upperbody.length,
                         ),
                       ),
                     );
-                  }
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
@@ -135,7 +145,7 @@ class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
   }
 
   // Show a bottom sheet with exercise details
-  void showAboutExercise(BuildContext context, String gif, String name) {
+  void showAboutExercise(BuildContext context, String gif, String name,String benefit) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -148,7 +158,7 @@ class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  child: Image.file(File(gif)),
+                  child: Image.asset(gif),
                 ),
               ),
               Text(
@@ -157,8 +167,8 @@ class _ShowUpperBodyExerciseState extends State<ShowUpperBodyExercise> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+              Text(
+                benefit,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),

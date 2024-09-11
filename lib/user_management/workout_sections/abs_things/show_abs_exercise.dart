@@ -1,8 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/abs_exercise_hive_things/abs_exercise_model_class.dart';
-import 'package:fullbody_workout/hive_services/abs_exercise_hive_things/hive_funtions.dart';
 import 'package:fullbody_workout/user_management/workout_sections/abs_things/abs_exercise_one.dart';
 
 class ShowAbsExercise extends StatefulWidget {
@@ -22,12 +18,40 @@ class ShowAbsExercise extends StatefulWidget {
 }
 
 class _ShowAbsExerciseState extends State<ShowAbsExercise> {
-  @override
-  void initState() {
-    super.initState();
-    // Retrieve abs exercises from the Hive database
-    getAbsExercise();
-  }
+  final List<String> abs = [
+    'assets/abs1.gif',
+    'assets/abs2.gif',
+    'assets/abs4.gif',
+    'assets/abs5.gif',
+    'assets/abs6.gif',
+    'assets/abs9.gif',
+  ];
+
+   final List<String> names = [
+    'Cross arm crunches',
+    'Bent leg twist',
+    'Dumbbell torture tucks',
+    'Dumbbell crunches',
+    'Flutter kicks',
+    'Reverse crunches',
+  ];
+
+  final List<String> benefit = [
+    'Targets the upper abs, improves core stability, and enhances abdominal muscle definition.',
+    'Engages obliques and lower abs, improves rotational core strength, and increases flexibility.',
+    'Combines core strength with added resistance, targeting both upper and lower abs.',
+    'Strengthens the upper abs while adding resistance for enhanced muscle growth.',
+    'Targets lower abs and hip flexors, improving endurance and core stability.',
+    ' Focuses on lower abs, reduces lower back strain, and improves core strength.',
+  ];
+
+  List<int> numbers = [11,21,18,15,30,14];
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // Retrieve abs exercises from the Hive database
+  //   getAbsExercise();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,51 +85,34 @@ class _ShowAbsExerciseState extends State<ShowAbsExercise> {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: textColor),
                     ),
                     Text(
-                      'Day 1',
+                      'Day ${widget.completedDay}',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: textColor),
                     ),
                   ],
                 ),
                 const SizedBox(height: 20),
                 Expanded(
-                  child: ValueListenableBuilder(
-                    valueListenable: absExerciseList,
-                    builder: (BuildContext context, List<AbsExerciseModelClass> absExerciseList, Widget? child) {
-                      // Display a message if no exercises are available
-                      if (absExerciseList.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'No exercises available',
-                            style: TextStyle(color: textColor),
-                          ),
-                        );
-                      } else {
-                        // Display a list of exercises
-                        return ListView.separated(
+                  child:ListView.separated(
                           itemBuilder: (ctx, index) {
-                            final exercise = absExerciseList[index];
                             return ListTile(
                               minVerticalPadding: 10,
                               leading: GestureDetector(
-                                onTap: () => showAboutExercise(context, exercise.absExerciseGif, exercise.absExerciseName),
-                                child: exercise.absExerciseGif.isNotEmpty
-                                    ? ClipRRect(
-                                        child: Image.file(File(exercise.absExerciseGif)),
-                                      )
-                                    : null,
+                                onTap: (){
+                                  showAboutExercise(context, abs[index], names[index], benefit[index]);
+                                },
+                                child: ClipRRect(
+                                          child: Image.asset(abs[index]),
+                                        ),
                               ),
-                              title: Text(exercise.absExerciseName, style: TextStyle(color: textColor)),
-                              subtitle: Text(exercise.absreps, style: TextStyle(color: textColor.withOpacity(0.6))),
+                              title: Text('${names[index]}', style: TextStyle(color: textColor)),
+                              subtitle: Text('${numbers[index]}', style: TextStyle(color: textColor.withOpacity(0.6))),
                             );
                           },
                           separatorBuilder: (context, index) {
                             return Divider(color: textColor.withOpacity(0.2));
                           },
-                          itemCount: absExerciseList.length,
-                        );
-                      }
-                    },
-                  ),
+                          itemCount: abs.length,
+                        ),
                 ),
               ],
             ),
@@ -118,15 +125,12 @@ class _ShowAbsExerciseState extends State<ShowAbsExercise> {
                 onPressed: () {
                   // Trigger the onComplete callback and navigate to the next screen if exercises are available
                   widget.onComplete();
-                  if (absExerciseList.value.isNotEmpty) {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => AbsExerciseOne(
-                        exercise: absExerciseList.value[0],
                         index: 0,
                         completedDay: widget.completedDay,
                       ),
                     ));
-                  }
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
@@ -147,7 +151,7 @@ class _ShowAbsExerciseState extends State<ShowAbsExercise> {
   }
 
   // Show information about the selected exercise in a bottom sheet
-  void showAboutExercise(BuildContext context, String gif, String name) {
+  void showAboutExercise(BuildContext context, String gif, String name,String benefit) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -161,7 +165,7 @@ class _ShowAbsExerciseState extends State<ShowAbsExercise> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  child: Image.file(File(gif)),
+                  child: Image.asset(gif),
                 ),
               ),
               Text(
@@ -170,8 +174,8 @@ class _ShowAbsExerciseState extends State<ShowAbsExercise> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular exercise is about as close to a magic potion as you can get.',
+               Text(
+                benefit,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),

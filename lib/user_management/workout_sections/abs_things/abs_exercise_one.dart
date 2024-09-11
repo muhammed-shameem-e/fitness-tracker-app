@@ -1,21 +1,16 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/abs_exercise_hive_things/abs_exercise_model_class.dart';
-import 'package:fullbody_workout/hive_services/abs_exercise_hive_things/hive_funtions.dart';
 import 'package:fullbody_workout/user_management/workout_sections/abs_30_days.dart';
 import 'package:fullbody_workout/user_management/workout_sections/abs_things/abs_congratulations.dart';
-import 'package:fullbody_workout/user_management/workout_sections/abs_things/abs_rest_time.dart';
+import 'package:fullbody_workout/user_management/workout_sections/short_codelist/abs_exercises_lists.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AbsExerciseOne extends StatefulWidget {
   const AbsExerciseOne({
     super.key,
-    required this.exercise,
     required this.index,
     required this.completedDay,
   });
 
-  final AbsExerciseModelClass exercise;
   final int index;
   final int completedDay;
 
@@ -37,21 +32,21 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
   Future<void> _saveLikeAndDisLike() async {
     final save = await SharedPreferences.getInstance();
     setState(() {
-      isThumbDownPressed = save.getBool('isThumbDownPressed${widget.exercise.absExerciseName}') ?? false;
-      isThumbUpPressed = save.getBool('isThumbUpPressed${widget.exercise.absExerciseName}') ?? false;
+      isThumbDownPressed = save.getBool('isThumbDownPressed${widget.index}') ?? false;
+      isThumbUpPressed = save.getBool('isThumbUpPressed${widget.index}') ?? false;
     });
   }
 
   // Method to save the like/dislike preferences
   Future<void> savePreferences() async {
     final save = await SharedPreferences.getInstance();
-    await save.setBool('isThumbDownPressed${widget.exercise.absExerciseName}', isThumbDownPressed);
-    await save.setBool('isThumbUpPressed${widget.exercise.absExerciseName}', isThumbUpPressed);
+    await save.setBool('isThumbDownPressed${widget.index}', isThumbDownPressed);
+    await save.setBool('isThumbUpPressed${widget.index}', isThumbUpPressed);
   }
 
   @override
   Widget build(BuildContext context) {
-    final int length = absExerciseList.value.length;
+    final int length = AbsExerciseData.abs.length;
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
 
@@ -63,7 +58,7 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(widget.exercise.absExerciseName, style: const TextStyle(fontWeight: FontWeight.w500)),
+            Text('${AbsExerciseData.names[widget.index]}', style: const TextStyle(fontWeight: FontWeight.w500)),
             const SizedBox(width: 5),
             Text('${widget.index + 1}/$length', style: theme.textTheme.bodyMedium),
           ],
@@ -85,7 +80,7 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  child: Image.file(File(widget.exercise.absExerciseGif)),
+                  child: Image.asset(AbsExerciseData.abs[widget.index]),
                 ),
               ),
               Padding(
@@ -118,7 +113,7 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
                     // About button
                     IconButton(
                       onPressed: () {
-                        showAboutExercise(context, widget.exercise.absExerciseGif, widget.exercise.absExerciseName);
+                        // showAboutExercise(context, widget.exercise.absExerciseGif, widget.exercise.absExerciseName,widget.exercise.absExerciseBenefit);
                       },
                       icon: Icon(Icons.question_mark, color: theme.iconTheme.color),
                     ),
@@ -153,7 +148,7 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
               ),
               const SizedBox(height: 20),
               Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+                '${AbsExerciseData.benefits[widget.index]}',
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -187,7 +182,6 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
                       } else if (widget.index > 0) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => AbsExerciseOne(
-                            exercise: absExerciseList.value[widget.index - 1],
                             index: widget.index - 1,
                             completedDay: widget.completedDay,
                           ),
@@ -212,7 +206,7 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
                       // Add any onPressed functionality if needed, or leave it empty
                     },
                     child: Text(
-                      widget.exercise.absreps,
+                      'x${AbsExerciseData.numbers[widget.index]}',
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.black,
@@ -229,14 +223,14 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
                       elevation: 0,
                     ),
                     onPressed: () {
-                      if (widget.index == absExerciseList.value.length - 1) {
+                      if (widget.index == AbsExerciseData.abs.length - 1) {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) => AbsCongratulations(completedDay: widget.completedDay),
                         ));
                       } else {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AbsRestTime(
-                            nextExercise: absExerciseList.value[widget.index + 1],
+                          builder: (context) => AbsExerciseOne(
+                            index: widget.index + 1,
                             completedDay: widget.completedDay,
                           ),
                         ));
@@ -256,88 +250,33 @@ class _AbsExerciseOneState extends State<AbsExerciseOne> {
       ),
     );
   }
-
-  // Method to show the alert dialog when user wants to exit today's exercise
   void alertExitTodayExercise(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).dialogBackgroundColor,
-          content: const Text('Are you sure you want to skip today\'s workout?'),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Text(
-                'NO',
-                style: TextStyle(color: Colors.blue),
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const Abs30Days()),
-                );
-              },
-              icon: const Text(
-                'YES',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Method to show information about the exercise
-  void showAboutExercise(BuildContext context, String gif, String name) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: ClipRRect(child: Image.file(File(gif))),
-              ),
-              Text(
-                name,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  minimumSize: WidgetStateProperty.all<Size>(const Size(300, 50)),
-                ),
-                child: const Text(
-                  'Close',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-                ),
-              ),
-            ],
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Exit Today\'s Exercise?'),
+        content: const Text('Are you sure you want to exit today\'s exercise session?'),
+        actions: [
+          // Cancel button
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
           ),
-        );
-      },
-    );
-  }
+          // Exit button
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Abs30Days()));
+            },
+            child: const Text('Exit'),
+          ),
+        ],
+      );
+    },
+  );
 }
+
+}
+

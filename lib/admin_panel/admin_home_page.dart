@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fullbody_workout/admin_panel/add_categories_things/see_all_categories.dart';
-import 'package:fullbody_workout/admin_panel/show_main_categories_exercises/show_abs_exercise.dart';
-import 'package:fullbody_workout/admin_panel/show_main_categories_exercises/show_leg_exercise.dart';
-import 'package:fullbody_workout/admin_panel/show_main_categories_exercises/show_upperbody_exericse.dart';
 import 'package:fullbody_workout/hive_services/user_detail_hive_things/user_model_class.dart';
 import 'package:fullbody_workout/main.dart';
 import 'package:fullbody_workout/authentication/form_page.dart';
@@ -50,39 +47,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    // CategoryItem for UpperBody
-                    CategoryItem(
-                      title: 'UpperBody',
-                      imagePath: 'assets/upperbodyphoto.jpg',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ShowUpperBodyExerciseAdminSide()));
-                      },
-                    ),
-                    // CategoryItem for Abs
-                    CategoryItem(
-                      title: 'Abs',
-                      imagePath: 'assets/absphoto.jpg',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ShowAbsExerciseAdminSide()));
-                      },
-                    ),
-                    // CategoryItem for Leg
-                    CategoryItem(
-                      title: 'Leg',
-                      imagePath: 'assets/legphoto.jpg',
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ShowLegExerciseAdminSide()));
-                      },
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
@@ -137,8 +101,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Logout from Admin'),
-          content: const Text('Are you sure you want to log out?'),
+          title: const Text('Confirmation'),
+          content: const Text('you will reach return to your workout side'),
           actions: [
             TextButton(
               onPressed: () {
@@ -146,7 +110,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               child: Text(
                 'NO',
-                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                style: TextStyle(color: Theme.of(context).colorScheme.secondary,),
               ),
             ),
             TextButton(
@@ -167,7 +131,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               child: const Text(
                 'YES',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Colors.green),
               ),
             ),
           ],

@@ -1,8 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/leg_exercise_hive_things/hive_functions.dart';
-import 'package:fullbody_workout/hive_services/leg_exercise_hive_things/leg_exercise_model_class.dart';
 import 'package:fullbody_workout/user_management/workout_sections/leg_things/leg_exerice_one.dart';
 
 class ShowLegExercise extends StatefulWidget {
@@ -16,11 +12,45 @@ class ShowLegExercise extends StatefulWidget {
 
 class _ShowLegExerciseState extends State<ShowLegExercise> {
 
-  @override
-  void initState() {
-    super.initState();
-    getLegExercises(); // Load the list of leg exercises when the widget initializes
-  }
+  final List<String> leg = [
+    'assets/leg1.gif',
+    'assets/leg2.gif',
+    'assets/leg3.gif',
+    'assets/leg4.gif',
+    'assets/leg6.gif',
+    'assets/leg7.gif',
+    'assets/leg8.gif',
+    'assets/leg9.gif',
+  ];
+
+  final List<String> names = [
+    'Plank with both leg',
+    'Mountain climber',
+    'walking lungers',
+    'Jump squat',
+    'Glute bridge right leg',
+    'Glute bridge left leg',
+    'Lungers with both leg',
+    'Body weight squat'
+  ];
+
+  final List<int> numbers = [23, 11, 29, 15, 27, 19, 12, 30];
+
+  final List<String> benefit = [
+    'Strengthens the core, shoulders, and back; improves stability and endurance.',
+    'Enhances cardiovascular endurance, core stability, and overall strength while improving agility.',
+    'Builds lower body strength, improves balance, and enhances flexibility and coordination.',
+    'Increases lower body power, boosts cardiovascular fitness, and enhances explosive strength.',
+    'Targets the glutes, hamstrings, and lower back; improves hip stability and strength in the right leg.',
+    'Similar to the right leg, but targets the left leg, enhancing glute and hamstring strength, and hip stability.',
+    'Strengthens quads, hamstrings, and glutes; improves balance and coordination while enhancing overall lower body strength.',
+  ];
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getLegExercises(); // Load the list of leg exercises when the widget initializes
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,45 +66,35 @@ class _ShowLegExerciseState extends State<ShowLegExercise> {
             child: Column(
               children: [
                 // Header row showing the title and the day of the exercise
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Leg exercises', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-                    Text('Day 1', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                    Text('Day ${widget.completedDay}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
                   ],
                 ),
                 const SizedBox(height: 20), // Space between the header and the list
                 // List of exercises
                 Expanded(
-                  child: ValueListenableBuilder(
-                    valueListenable: legExerciseList, // Listen to changes in the list of exercises
-                    builder: (BuildContext context, List<LegExerciseModelClass> legExerciseList, Widget? child) {
-                      if (legExerciseList.isEmpty) {
-                        return const Center(child: Text('No exercises available')); // Show message if no exercises are available
-                      } else {
-                        return ListView.separated(
+                  child:ListView.separated(
                           itemBuilder: (ctx, index) {
-                            final exercise = legExerciseList[index];
                             return ListTile(
                               minVerticalPadding: 15, // Adjust the padding
                               leading: GestureDetector(
-                                onTap: () => showAboutExercise(context, exercise.legExerciseGif, exercise.legExerciseName), // Show exercise details when tapped
-                                child: exercise.legExerciseGif.isNotEmpty
-                                    ? ClipRRect(
-                                        child: Image.file(File(exercise.legExerciseGif)), // Display the exercise image
-                                      )
-                                    : null,
+                                onTap: (){
+                                  showAboutExercise(context, leg[index], names[index], benefit[index]);
+                                },
+                                child: ClipRRect(
+                                          child: Image.asset(leg[index]), // Display the exercise image
+                                        ),
                               ),
-                              title: Text(exercise.legExerciseName), // Display the exercise name
-                              subtitle: Text(exercise.legreps), // Display the exercise repetitions
+                              title: Text('${names[index]}'), // Display the exercise name
+                              subtitle: Text('${numbers[index]}'), // Display the exercise repetitions
                             );
                           },
                           separatorBuilder: (context, index) => const Divider(), // Add a divider between the list items
-                          itemCount: legExerciseList.length, // Set the number of exercises in the list
-                        );
-                      }
-                    },
-                  ),
+                          itemCount: leg.length, // Set the number of exercises in the list
+                        ),
                 ),
               ],
             ),
@@ -87,26 +107,23 @@ class _ShowLegExerciseState extends State<ShowLegExercise> {
               child: ElevatedButton(
                 onPressed: () {
                   widget.onComplete(); // Notify that the exercise is completed
-                  if (legExerciseList.value.isNotEmpty) {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => LegExerciseOne(
-                          exercise: legExerciseList.value.first, // Start the first exercise
                           index: 0, // Index of the exercise in the list
                           completedDay: widget.completedDay, // Pass the completed day
                         ),
                       ),
                     );
-                  }
-                },
+                  },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.green), // Set button background color
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.green), // Set button background color
+                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10), // Round the corners of the button
                     ),
                   ),
-                  minimumSize: MaterialStateProperty.all<Size>(const Size(200, 50)), // Set the button size
+                  minimumSize: WidgetStateProperty.all<Size>(const Size(200, 50)), // Set the button size
                 ),
                 child: const Text('Start', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)), // Set the button text
               ),
@@ -118,7 +135,7 @@ class _ShowLegExerciseState extends State<ShowLegExercise> {
   }
 
   // Function to show details about the selected exercise in a bottom sheet
-  void showAboutExercise(BuildContext context, String gif, String name) {
+  void showAboutExercise(BuildContext context, String gif, String name,String benefit) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Allow the bottom sheet to be scrollable
@@ -132,7 +149,7 @@ class _ShowLegExerciseState extends State<ShowLegExercise> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: ClipRRect(
-                  child: Image.file(File(gif)),
+                  child: Image.asset(gif),
                 ),
               ),
               // Display the exercise name
@@ -143,8 +160,8 @@ class _ShowLegExerciseState extends State<ShowLegExercise> {
               ),
               const SizedBox(height: 20),
               // Display a motivational quote
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+              Text(
+                benefit,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),

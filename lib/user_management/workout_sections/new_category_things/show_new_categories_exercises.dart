@@ -67,7 +67,9 @@ class _ShowCategoriesExerciseUserSideState extends State<ShowCategoriesExerciseU
                   child: allCategoryExercise == null
                       ? const Center(child: CircularProgressIndicator())
                       : allCategoryExercise!.isEmpty
-                          ? const Center(child: Text('No exercises found'))
+                          ? const Center(child: Text("No exercises available,First, you need to add exercises from the admin side. To do this, go to the settings page where you'll find an option to access the admin side. There, you can add exercises, and once you're done, the exercises will appear here for you to perform.",
+                          textAlign: TextAlign.center,
+                          ))
                           : ListView.separated(
                               itemBuilder: (ctx, index) {
                                 final exercise = allCategoryExercise![index];
@@ -75,7 +77,7 @@ class _ShowCategoriesExerciseUserSideState extends State<ShowCategoriesExerciseU
                                   minVerticalPadding: 20,
                                   leading: GestureDetector(
                                     onTap: () {
-                                      showAboutExercise(context, exercise.execiseGif, exercise.execiseName);
+                                      showAboutExercise(context, exercise.execiseGif, exercise.execiseName,exercise.exerciseBenefit);
                                     },
                                     child: exercise.execiseGif.isNotEmpty
                                         ? ClipRRect(
@@ -139,7 +141,7 @@ class _ShowCategoriesExerciseUserSideState extends State<ShowCategoriesExerciseU
   }
 
   // Show a modal bottom sheet with exercise details
-  void showAboutExercise(BuildContext context, String gif, String name) {
+  void showAboutExercise(BuildContext context, String gif, String name,String benefit) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -161,8 +163,8 @@ class _ShowCategoriesExerciseUserSideState extends State<ShowCategoriesExerciseU
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+              Text(
+                benefit,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),

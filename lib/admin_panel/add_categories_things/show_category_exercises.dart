@@ -114,7 +114,7 @@ class _ShowCategoriesExerciseAdminSideState extends State<ShowCategoriesExercise
                                   minVerticalPadding: 20,
                                   leading: GestureDetector(
                                     onTap: () {
-                                      showAboutExercise(context, exercise.execiseGif, exercise.execiseName);
+                                      showAboutExercise(context, exercise.execiseGif, exercise.execiseName,exercise.exerciseBenefit);
                                     },
                                     child: exercise.execiseGif.isNotEmpty
                                         ? ClipRRect(child: Image.file(File(exercise.execiseGif)))
@@ -167,7 +167,7 @@ class _ShowCategoriesExerciseAdminSideState extends State<ShowCategoriesExercise
   }
 
   // Show details about the exercise in a bottom sheet
-  void showAboutExercise(BuildContext context, String gif, String name) {
+  void showAboutExercise(BuildContext context, String gif, String name,String benefit) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -189,8 +189,8 @@ class _ShowCategoriesExerciseAdminSideState extends State<ShowCategoriesExercise
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+               Text(
+                benefit,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),

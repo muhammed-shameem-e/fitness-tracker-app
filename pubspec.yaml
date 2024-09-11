@@ -134,6 +134,29 @@ flutter:
     - assets/happyphoto.png
     - assets/blushphoto.png
     - assets/gymlogo.png
+    - assets/pushup1.gif
+    - assets/pushup2.gif
+    - assets/pushup3.gif
+    - assets/pushup4.gif
+    - assets/pushup5.gif
+    - assets/pushup6.gif
+    - assets/pushup7.gif
+    - assets/restime.gif
+    - assets/abs1.gif
+    - assets/abs2.gif
+    - assets/abs4.gif
+    - assets/abs5.gif
+    - assets/abs6.gif
+    - assets/abs9.gif
+    - assets/leg1.gif
+    - assets/leg2.gif
+    - assets/leg3.gif
+    - assets/leg4.gif
+    - assets/leg5.gif
+    - assets/leg6.gif
+    - assets/leg7.gif
+    - assets/leg8.gif
+    - assets/leg9.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -79,7 +79,6 @@ class _EditAllExerciseDataState extends State<EditAllExerciseData> {
                               initialValue: widget.data.execiseName,
                               decoration: const InputDecoration(
                                 hintText: 'Enter exercise name',
-                                prefixIcon: Icon(Icons.person),
                                 border: OutlineInputBorder(),
                               ),
                               onChanged: (value) {
@@ -93,7 +92,6 @@ class _EditAllExerciseDataState extends State<EditAllExerciseData> {
                               keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
                                 hintText: 'Reps',
-                                prefixIcon: Icon(Icons.person),
                                 border: OutlineInputBorder(),
                               ),
                               onChanged: (value) {

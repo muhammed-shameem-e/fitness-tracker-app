@@ -1,19 +1,15 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/hive_services/abs_exercise_hive_things/abs_exercise_model_class.dart';
-import 'package:fullbody_workout/hive_services/abs_exercise_hive_things/hive_funtions.dart';
 import 'dart:async';
 import 'package:fullbody_workout/user_management/workout_sections/abs_things/abs_exercise_one.dart';
 
 class AbsRestTime extends StatefulWidget {
   const AbsRestTime({
     super.key,
-    required this.nextExercise,
     required this.completedDay,
+    required this.index
   });
-
-  final AbsExerciseModelClass nextExercise; // Next exercise to display after the rest
   final int completedDay; // Day number for tracking progress
+  final int index;
 
   @override
   _AbsRestTimeState createState() => _AbsRestTimeState();
@@ -21,7 +17,8 @@ class AbsRestTime extends StatefulWidget {
 
 class _AbsRestTimeState extends State<AbsRestTime> {
   Timer? _timer;
-  int _secondsRemaining = 3; // Initial rest time in seconds
+  int _secondsRemaining = 60; // Initial rest time in seconds
+  
 
   @override
   void initState() {
@@ -45,9 +42,8 @@ class _AbsRestTimeState extends State<AbsRestTime> {
   void _navigateToNextExercise() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => AbsExerciseOne(
-        exercise: widget.nextExercise,
-        index: absExerciseList.value.indexOf(widget.nextExercise),
         completedDay: widget.completedDay,
+        index: widget.index,
       ),
     ));
   }
@@ -86,18 +82,12 @@ class _AbsRestTimeState extends State<AbsRestTime> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              // Display the next exercise name
-              Text(
-                'Up Next: ${widget.nextExercise.absExerciseName}',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
-                textAlign: TextAlign.center,
-              ),
               const SizedBox(height: 10),
               // Display the exercise GIF
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.file(
-                  File(widget.nextExercise.absExerciseGif),
+                child: Image.asset(
+                  'assets/restime.gif',
                   height: 300,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -126,7 +116,7 @@ class _AbsRestTimeState extends State<AbsRestTime> {
               const SizedBox(height: 40),
               // Buttons to add time or skip rest
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     onPressed: _addTime,

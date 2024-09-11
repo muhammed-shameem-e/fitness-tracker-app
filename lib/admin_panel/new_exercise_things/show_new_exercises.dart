@@ -56,7 +56,7 @@ class _ShowNewExercisesState extends State<ShowNewExercises> {
                                 return ListTile(
                                   minTileHeight: 100,
                                   leading: GestureDetector(
-                                    onTap: () => showAboutExercise(context, exercise.execiseGif, exercise.execiseName),
+                                    onTap: () => showAboutExercise(context, exercise.execiseGif, exercise.execiseName,exercise.exerciseBenefit),
                                     child: exercise.execiseGif.isNotEmpty
                                         ? ClipRRect(
                                             child: Image.file(
@@ -118,7 +118,7 @@ class _ShowNewExercisesState extends State<ShowNewExercises> {
                   minimumSize: WidgetStateProperty.all<Size>(const Size(200, 50)),
                 ),
                 child: const Text(
-                  'Add',
+                  'Add exercise',
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -130,7 +130,7 @@ class _ShowNewExercisesState extends State<ShowNewExercises> {
   }
 
   // Function to show exercise details in a bottom sheet
-  void showAboutExercise(BuildContext context, String gif, String name) {
+  void showAboutExercise(BuildContext context, String gif, String name,String benefit) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -152,8 +152,8 @@ class _ShowNewExercisesState extends State<ShowNewExercises> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+              Text(
+                benefit,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),

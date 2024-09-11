@@ -41,87 +41,89 @@ class _RestDayPageState extends State<RestDayPage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            // Animated container in the center of the page.
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                height: 250,
-                width: 250,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 6,
-                    color: const Color.fromARGB(255, 90, 169, 235),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // Animated container in the center of the page.
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 250,
+                  width: 250,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 6,
+                      color: const Color.fromARGB(255, 90, 169, 235),
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: ScaleTransition(
-                    scale: _animation,
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 2,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.bolt,
-                        size: 50,
+                  child: Center(
+                    child: ScaleTransition(
+                      scale: _animation,
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.bolt,
+                          size: 50,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            // Text and button at the bottom of the page.
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Column(
-                children: [
-                  // Encouraging text for the user to take a rest day.
-                  const Text(
-                    "Great job finishing your workout streak! It's time for a rest day. Use this day to let your muscles recover and come back even stronger. Enjoy some relaxation, and get ready to crush your next workout session!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 17,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w500,
+              // Text and button at the bottom of the page.
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                  children: [
+                    // Encouraging text for the user to take a rest day.
+                    const Text(
+                      "Great job finishing your workout streak! It's time for a rest day. Use this day to let your muscles recover and come back even stronger. Enjoy some relaxation, and get ready to crush your next workout session!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 17,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Button to acknowledge the rest day and return to the previous screen.
-                  ElevatedButton(
-                    onPressed: () {
-                      // Call the onComplete callback and pop the current page off the navigation stack.
-                      widget.onComplete();
-                      Navigator.of(context).pop();
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                      minimumSize: WidgetStateProperty.all<Size>(const Size(300, 50)),
+                    const SizedBox(height: 20),
+                    // Button to acknowledge the rest day and return to the previous screen.
+                    ElevatedButton(
+                      onPressed: () {
+                        // Call the onComplete callback and pop the current page off the navigation stack.
+                        widget.onComplete();
+                        Navigator.of(context).pop();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
+                        minimumSize: WidgetStateProperty.all<Size>(const Size(300, 50)),
+                      ),
+                      child: const Text(
+                        'Ok',
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: const Text(
-                      'Ok',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

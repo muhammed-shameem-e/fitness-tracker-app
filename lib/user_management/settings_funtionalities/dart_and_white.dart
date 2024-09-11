@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemePage extends StatefulWidget {
   const ThemePage({super.key, required this.toggleTheme});
-  
+
   final Function(bool)? toggleTheme;
 
   @override
@@ -37,21 +37,7 @@ class _ThemePageState extends State<ThemePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: () async {
-              if (widget.toggleTheme != null) {
-                widget.toggleTheme!(_isDarkMode);
-              }
-              await _saveThemePreferences(_isDarkMode);
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              'Save',
-              style: TextStyle(color: Colors.blue),
-            ),
-          ),
-        ],
+        title: const Text('Select Theme'),
       ),
       body: Column(
         children: [
@@ -64,6 +50,10 @@ class _ThemePageState extends State<ThemePage> {
                 onChanged: (bool? value) {
                   setState(() {
                     _isDarkMode = value!;
+                    if (widget.toggleTheme != null) {
+                      widget.toggleTheme!(_isDarkMode); // Immediately toggle the theme
+                    }
+                    _saveThemePreferences(_isDarkMode); // Save preference
                   });
                 },
               ),
@@ -78,6 +68,10 @@ class _ThemePageState extends State<ThemePage> {
                 onChanged: (bool? value) {
                   setState(() {
                     _isDarkMode = value!;
+                    if (widget.toggleTheme != null) {
+                      widget.toggleTheme!(_isDarkMode); // Immediately toggle the theme
+                    }
+                    _saveThemePreferences(_isDarkMode); // Save preference
                   });
                 },
               ),

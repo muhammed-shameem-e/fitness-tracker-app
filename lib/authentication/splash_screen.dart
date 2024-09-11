@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fullbody_workout/admin_panel/admin_home_page.dart';
 import 'package:fullbody_workout/hive_services/user_detail_hive_things/user_model_class.dart';
-import 'package:fullbody_workout/main.dart';
 import 'package:fullbody_workout/authentication/form_page.dart';
 import 'package:fullbody_workout/user_management/main_four_pages_here/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -68,29 +66,32 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> shareprefs() async {
     await Future.delayed(const Duration(seconds: 5));
 
-    final getAdmin = await SharedPreferences.getInstance();
-    final adminLog = getAdmin.getBool(SAVE_ADMIN_VALUE);
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
 
-    if (adminLog == true) {
+    if (isFirstLaunch) {
+      // Show FormPage for the first launch
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const AdminHomePage()),
+        MaterialPageRoute(builder: (context) => const FormPage()),
       );
-    } else if (adminLog == false) {
+    } else {
+      // Check if user details exist in Hive
       final userDb = await Hive.openBox<UsersData>('user_db');
       if (userDb.isNotEmpty) {
         final userData = userDb.values.first;
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomePage(data: userData, toggletheme: widget.toggleTheme)),
+          MaterialPageRoute(
+              builder: (context) => HomePage(
+                    data: userData,
+                    toggletheme: widget.toggleTheme,
+                  )),
         );
       } else {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const FormPage()),
         );
       }
-    } else {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const FormPage()),
-      );
     }
   }
 }
+

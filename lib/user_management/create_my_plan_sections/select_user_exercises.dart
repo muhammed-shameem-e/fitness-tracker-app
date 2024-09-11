@@ -61,7 +61,9 @@ class _AddIntoUserExercisesState extends State<AddIntoUserExercises> {
                         _isUserSelected = List<bool>.filled(addAllExerciseList.length, false);
                       }
                       return addAllExerciseList.isEmpty
-                          ? const Center(child: Text('No exercise found'))
+                          ? const Center(child: Text("No exercises available,First, you need to add exercises from the admin side. To do this, go to the settings page where you'll find an option to access the admin side. There, you can add exercises, and once you're done, the exercises will appear here for you to perform.",
+                            textAlign: TextAlign.center,
+                            ))
                           : ListView.separated(
                               itemBuilder: (ctx, index) {
                                 final showData = addAllExerciseList[index];
@@ -69,7 +71,7 @@ class _AddIntoUserExercisesState extends State<AddIntoUserExercises> {
                                   minVerticalPadding: 10,
                                   leading: showData.execiseGif.isNotEmpty
                                       ? GestureDetector(
-                                          onTap: () => showAboutExercise(context),
+                                          onTap: () => showAboutExercise(context,showData.execiseGif,showData.execiseName,showData.exerciseBenefit),
                                           child: ClipRRect(
                                             child: Image.file(File(showData.execiseGif)),
                                           ),
@@ -164,7 +166,7 @@ class _AddIntoUserExercisesState extends State<AddIntoUserExercises> {
     );
   }
 
-  void showAboutExercise(BuildContext context) {
+  void showAboutExercise(BuildContext context,String name,String gif,String benefit) {
     final theme = Theme.of(context);
     showModalBottomSheet(
         context: context,
@@ -176,20 +178,20 @@ class _AddIntoUserExercisesState extends State<AddIntoUserExercises> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: ClipRRect(
-                    child: Image.asset('assets/exercisephoto.jfif'),
-                  ),
+               Padding(
+                padding: const EdgeInsets.all(20),
+                child: ClipRRect(
+                  child: Image.file(File(gif)),
                 ),
+              ),
                 Text(
-                  'ExerciseName',
+                  name,
                   style: TextStyle(fontWeight: FontWeight.w500,color: Theme.of(context).textTheme.bodyLarge!.color,),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'When it comes to health, regular\nexercise is about as close to a\nmagic potion as you can get.',
+                  benefit,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color,)
                 ),

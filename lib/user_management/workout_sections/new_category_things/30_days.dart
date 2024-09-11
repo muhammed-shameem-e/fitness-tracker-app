@@ -230,19 +230,21 @@ class _NewCategory30DaysState extends State<NewCategory30Days> {
                                       );
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                      foregroundColor: Colors.white,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                                      ),
+                                      backgroundColor: const Color.fromARGB(255, 216, 255, 217),
+                                    
                                     ),
-                                    child: const Text('Start Workout'),
+                                    child: const Text('Start'),
                                   ),
-                                if (isCompleted)
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green[400],
-                                  ), // Display a check icon if the day is completed
+                               if (isCompleted)
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 30),
+                                    child: Text(
+                                      'Completed',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 49, 105, 51),
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
                               ],
                             ),
                           ),

@@ -68,7 +68,7 @@ class _AddExercisePageState extends State<AddExercisePage> {
                                 color: Colors.grey[300],
                               ),
                               child: const Center(
-                                child: Icon(Icons.add_a_photo),
+                                child: Icon(Icons.gif),
                               ),
                             );
                     },
